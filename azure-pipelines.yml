@@ -16,7 +16,7 @@ jobs:
 
   - script: |
       call activate chihiro
-      conda install --yes --quiet --name chihiro openssl zlib
+      conda install --yes --quiet --name chihiro openssl zlib jpeg
     displayName: Install Anaconda packages
 
   # - script: |
@@ -29,7 +29,7 @@ jobs:
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       set CC=cl.exe
       set CXX=cl.exe
-      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF -DMONOLITHIC_BUILD=ON
+      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF -DMONOLITHIC_BUILD=ON -DWITH_JPEG=ON
       cmake --build build
     displayName: Compile libfreerdp
 
