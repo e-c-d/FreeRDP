@@ -16,7 +16,7 @@ jobs:
 
   - script: |
       call activate chihiro
-      conda install --yes --quiet --name chihiro openssl
+      conda install --yes --quiet --name chihiro openssl zlib
     displayName: Install Anaconda packages
 
   - script: |
@@ -24,7 +24,7 @@ jobs:
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       set CC=cl.exe
       set CXX=cl.exe
-      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC_CLIENT=OFF
       cmake --build build
     displayName: Compile
 
