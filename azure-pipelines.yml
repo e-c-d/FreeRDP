@@ -19,30 +19,9 @@ jobs:
       conda install --yes --quiet --name chihiro openssl
     displayName: Install Anaconda packages
 
-  # - powershell: |
-  #     . $Env:CONDAPS1
-  #     conda activate chihiro
-  #     Write-Host "Agent name $Env:AGENT_NAME."
-  #     Write-Host "Path variable is $Env:Path."
-  #     gci env:* | sort-object name | Out-String | Write-Host
-  #   displayName: Print variables
-
   - powershell: |
       . $Env:CONDAPS1
       conda activate chihiro
       New-Item -Name build -ItemType directory
       cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
       cmake --build build
-
-  # - powershell: |
-  #     . $Env:CONDAPS1
-  #     conda activate chihiro
-  #     cl hello.c $CONDA_PREFIX\Library\lib\libssleay32.lib /I $CONDA_PREFIX\include
-  #   displayName: Build hello.c
-
-  # - task: CopyFiles@2
-  #   displayName: "Copy files to artifact staging directory"
-  #   inputs:
-  #     Contents: |
-  #       hello.exe
-  #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
