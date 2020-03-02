@@ -21,6 +21,9 @@ jobs:
 
   - script: |
       call activate chihiro
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      set CC=cl.exe
+      set CXX=cl.exe
       cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
       cmake --build build
     displayName: Compile
