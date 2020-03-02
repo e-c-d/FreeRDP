@@ -1,0 +1,69 @@
+parameters:
+- name: arch
+  type: str
+  default: "64"
+
+jobs:
+- job: freerdp-win${{ parameters.arch }}
+  pool:
+    vmImage: 'vs2017-win2016'
+
+  steps:
+  - powershell: |
+      Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+      Write-Host "##vso[task.setvariable variable=CONDAPS1]$env:CONDA\shell\condabin\conda-hook.ps1"
+    displayName: Add conda to PATH
+
+  - ${{ if eq(parameters.arch, "32") }}:
+      - powershell:
+          Write-Host "##vso[task.setvariable variable=CONDA_FORCE_32BIT]1"
+
+  - script: |
+      conda create --yes --quiet --name chihiro
+    displayName: Create Anaconda environment
+
+  - script: |
+      call activate chihiro
+      conda install --yes --quiet --name chihiro openssl zlib jpeg
+    displayName: Install Anaconda packages
+
+  # - script: |
+  #     call activate chihiro
+  #     cmake -LA || cd .
+  #   displayName: List compile options
+
+  - script: |
+      call activate chihiro
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars${{ parameters.arch }}.bat"
+      set CC=cl.exe
+      set CXX=cl.exe
+      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF -DMONOLITHIC_BUILD=ON -DWITH_JPEG=ON
+      cmake --build build
+    displayName: Compile libfreerdp
+
+  - script: |
+      dir /a-D /S /B build
+    displayName: List built files
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: "build/\
+        ?(freerdp2|freerdp-client2|wfreerdp|winpr2|winpr-hash|winpr-makecert|winpr-tools2)\
+        ?(.exe|.dll|.pdb|.lib|.exp|.manifest)"
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      flattenFolders: true
+    displayName: Copy files to artifact staging directory
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: freerdp-win64
+    displayName: Publish build artifacts
+
+  # - powershell: |
+  #     . $Env:CONDAPS1
+  #     conda activate chihiro
+  #     New-Item -Name build -ItemType directory
+  #     cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+  #     cmake --build build
