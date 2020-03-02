@@ -19,10 +19,10 @@ jobs:
       conda install --yes --quiet --name chihiro openssl zlib
     displayName: Install Anaconda packages
 
-  - script: |
-      call activate chihiro
-      cmake -LA || cd .
-    displayName: List compile options
+  # - script: |
+  #     call activate chihiro
+  #     cmake -LA || cd .
+  #   displayName: List compile options
 
   - script: |
       call activate chihiro
@@ -31,8 +31,24 @@ jobs:
       set CXX=cl.exe
       cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF
       cmake --build build
-      dir /a-D /S /B
-    displayName: Compile
+    displayName: Compile libfreerdp
+
+  - script: |
+      dir /a-D /S /B build
+    displayName: List built files
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: 'build/?(*.exe|*.dll|*.pdb|*.lib|*.exp|*.manifest)'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: Copy files to artifact staging directory
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: drop
+    displayName: Publish build artifacts
 
   # - powershell: |
   #     . $Env:CONDAPS1
