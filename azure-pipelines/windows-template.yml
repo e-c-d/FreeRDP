@@ -15,8 +15,8 @@ jobs:
       Write-Host "##vso[task.setvariable variable=CONDAPS1]$env:CONDA\shell\condabin\conda-hook.ps1"
     displayName: Add conda to PATH
 
-  - ${{ if eq(parameters.arch, "32") }}:
-      - powershell:
+  - ${{ if eq(parameters.arch, '32') }}:
+      - powershell: |
           Write-Host "##vso[task.setvariable variable=CONDA_FORCE_32BIT]1"
 
   - script: |
