@@ -5,7 +5,7 @@ parameters:
 
 jobs:
 - job:
-  displayName: freerdp-win${{ parameters.arch }}
+  displayName: freerdp-conda-win${{ parameters.arch }}
   pool:
     vmImage: 'vs2017-win2016'
 
@@ -59,7 +59,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: "freerdp-win${{ parameters.arch }}"
+      artifactName: "freerdp-conda-win${{ parameters.arch }}"
     displayName: Publish build artifacts
 
   # - powershell: |
