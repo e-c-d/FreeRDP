@@ -4,7 +4,8 @@ parameters:
   default: "64"
 
 jobs:
-- job: freerdp-win${{ parameters.arch }}
+- job:
+  displayName: freerdp-win${{ parameters.arch }}
   pool:
     vmImage: 'vs2017-win2016'
 
