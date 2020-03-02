@@ -29,8 +29,9 @@ jobs:
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       set CC=cl.exe
       set CXX=cl.exe
-      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF -DCHANNEL_URBDRC_CLIENT=ON -DCHANNEL_URBDRC_SERVER=OFF
+      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF
       cmake --build build
+      dir /a-D /S /B
     displayName: Compile
 
   # - powershell: |
