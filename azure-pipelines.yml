@@ -19,9 +19,15 @@ jobs:
       conda install --yes --quiet --name chihiro openssl
     displayName: Install Anaconda packages
 
-  - powershell: |
-      . $Env:CONDAPS1
-      conda activate chihiro
-      New-Item -Name build -ItemType directory
+  - script: |
+      call activate chihiro
       cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
       cmake --build build
+    displayName: Compile
+
+  # - powershell: |
+  #     . $Env:CONDAPS1
+  #     conda activate chihiro
+  #     New-Item -Name build -ItemType directory
+  #     cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release
+  #     cmake --build build
