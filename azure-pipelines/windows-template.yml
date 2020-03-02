@@ -1,6 +1,6 @@
 parameters:
 - name: arch
-  type: str
+  type: string
   default: "64"
 
 jobs:
@@ -58,7 +58,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: freerdp-win64
+      artifactName: "freerdp-win${{ parameters.arch }}"
     displayName: Publish build artifacts
 
   # - powershell: |
