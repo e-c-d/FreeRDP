@@ -40,7 +40,9 @@ jobs:
   - task: CopyFiles@2
     inputs:
       sourceFolder: '$(Build.SourcesDirectory)'
-      contents: 'build/?(*.exe|*.dll|*.pdb|*.lib|*.exp|*.manifest)'
+      contents: "build/\
+        ?(freerdp2|freerdp-client2|wfreerdp|winpr2|winpr-hash|winpr-makecert|winpr-tools2)\
+        ?(.exe|.dll|.pdb|.lib|.exp|.manifest)"
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
       flattenFolders: true
     displayName: Copy files to artifact staging directory
