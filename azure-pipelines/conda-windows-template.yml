@@ -4,10 +4,10 @@ parameters:
   default: "64"
 - name: openssl_version_name
   type: string
-  default: "1_0"
+  default: "1_1"
 - name: openssl_version
   type: string
-  default: ">=1.0,<1.1"
+  default: ">=1.1,<1.2"
 
 jobs:
 - job:
