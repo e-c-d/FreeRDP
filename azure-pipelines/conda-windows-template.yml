@@ -33,7 +33,7 @@ jobs:
 
   - script: |
       call activate chihiro
-      conda install --yes --quiet --name chihiro openssl'${{ parameters.openssl_version }}' zlib jpeg
+      conda install --yes --quiet --name chihiro openssl"${{ parameters.openssl_version }}" zlib jpeg
     displayName: Install Anaconda packages
 
   # - script: |
