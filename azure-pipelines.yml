@@ -1,7 +1,7 @@
 jobs:
-- template: azure-pipelines/conda-windows-template.yml
-  parameters:
-    arch: "32"
+# - template: azure-pipelines/conda-windows-template.yml
+#   parameters:
+#     arch: "32"
 - template: azure-pipelines/conda-windows-template.yml
   parameters:
     arch: "64"

@@ -2,10 +2,18 @@ parameters:
 - name: arch
   type: string
   default: "64"
+- name: openssl_version_name
+  type: string
+  default: "10"
+- name: openssl_version
+  type: string
+  default: ">=1.0,<1.1"
 
 jobs:
 - job:
-  displayName: freerdp-conda-win${{ parameters.arch }}
+  variables:
+    buildname: "freerdp-conda-ssl${{ parameters.openssl_version_name }}-win${{ parameters.arch }}"
+  displayName: "$(buildname)"
   pool:
     vmImage: 'vs2017-win2016'
 
@@ -25,7 +33,7 @@ jobs:
 
   - script: |
       call activate chihiro
-      conda install --yes --quiet --name chihiro openssl zlib jpeg
+      conda install --yes --quiet --name chihiro openssl'${{ parameters.openssl_version }}' zlib jpeg
     displayName: Install Anaconda packages
 
   # - script: |
@@ -33,34 +41,34 @@ jobs:
   #     cmake -LA || cd .
   #   displayName: List compile options
 
-  - script: |
-      call activate chihiro
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars${{ parameters.arch }}.bat"
-      set CC=cl.exe
-      set CXX=cl.exe
-      cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF -DMONOLITHIC_BUILD=ON -DWITH_JPEG=ON
-      cmake --build build
-    displayName: Compile libfreerdp
+  # - script: |
+  #     call activate chihiro
+  #     call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars${{ parameters.arch }}.bat"
+  #     set CC=cl.exe
+  #     set CXX=cl.exe
+  #     cmake -G "NMake Makefiles" -B build -DCMAKE_BUILD_TYPE=Release -DCHANNEL_URBDRC=OFF -DMONOLITHIC_BUILD=ON -DWITH_JPEG=ON
+  #     cmake --build build
+  #   displayName: Compile libfreerdp
 
-  - script: |
-      dir /a-D /S /B build
-    displayName: List built files
+  # - script: |
+  #     dir /a-D /S /B build
+  #   displayName: List built files
 
-  - task: CopyFiles@2
-    inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
-      contents: "build/\
-        ?(freerdp2|freerdp-client2|wfreerdp|winpr2|winpr-hash|winpr-makecert|winpr-tools2)\
-        ?(.exe|.dll|.pdb|.lib|.exp|.manifest)"
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      flattenFolders: true
-    displayName: Copy files to artifact staging directory
+  # - task: CopyFiles@2
+  #   inputs:
+  #     sourceFolder: '$(Build.SourcesDirectory)'
+  #     contents: "build/\
+  #       ?(freerdp2|freerdp-client2|wfreerdp|winpr2|winpr-hash|winpr-makecert|winpr-tools2)\
+  #       ?(.exe|.dll|.pdb|.lib|.exp|.manifest)"
+  #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  #     flattenFolders: true
+  #   displayName: Copy files to artifact staging directory
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: "freerdp-conda-win${{ parameters.arch }}"
-    displayName: Publish build artifacts
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+  #     artifactName: "$(buildname)"
+  #   displayName: Publish build artifacts
 
   # - powershell: |
   #     . $Env:CONDAPS1
