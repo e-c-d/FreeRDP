@@ -1,3 +1,4 @@
+from collections import OrderedDict as odict
 import itertools
 import yaml
 
@@ -5,6 +6,13 @@ import yaml
 Autogenerate `azure-pipelines.yml` file, because I'm too lazy to
 figure out how to do it with `strategy: matrix`.
 """
+
+yaml.add_representer(
+    odict,
+    lambda self, data: yaml.representer.SafeRepresenter.represent_dict(
+        self, data.items()
+    ),
+)
 
 
 def define_conda_jobs():
@@ -26,15 +34,15 @@ def define_conda_jobs():
     for arch, (ssl_name, ssl_version), build_type in itertools.product(
         ARCH, OPENSSL.items(), BUILD_TYPE
     ):
-        yield {
-            "template": "azure-pipelines/conda-windows-template.yml",
-            "parameters": dict(
+        yield odict(
+            template="azure-pipelines/conda-windows-template.yml",
+            parameters=dict(
                 arch=arch,
                 openssl_version_name=ssl_name,
                 openssl_version=ssl_version,
                 build_type=build_type,
             ),
-        }
+        )
 
 
 def main():
